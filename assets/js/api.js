@@ -47,24 +47,21 @@ function simulate(data, delay = 180) {
   });
 }
 
-const demoUsers = [
-  { id: 'u-patron-1', username: 'patron1', password: 'Patron123', role: 'patron', fullName: 'Alex Patron' },
-  { id: 'u-librarian-1', username: 'librarian1', password: 'Library123', role: 'librarian', fullName: 'Sam Librarian' }
-];
+// For demo purpose we keep users in localStorage. Do NOT store real passwords here in production.
+// Initialize with an empty list so teams must register users via the UI or backend instead of shipping secrets in source.
+const demoUsers = [];
 
 function loadUsers() {
   const raw = localStorage.getItem(USERS_STORAGE_KEY);
   if (raw) {
     try {
-      const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return parsed;
-      }
+      return JSON.parse(raw) || [];
     } catch (_error) {
       localStorage.removeItem(USERS_STORAGE_KEY);
     }
   }
 
+  // Seed nothing by default to avoid shipping credentials in source.
   localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(demoUsers));
   return [...demoUsers];
 }
@@ -76,8 +73,13 @@ function saveUsers(users) {
 const Api = {
   async login(username, password) {
     const users = loadUsers();
-    const user = users.find((entry) => entry.username === username && entry.password === password);
-    if (!user) {
+    const user = users.find((entry) => entry.username === username);
+    if (!user || !user.password) {
+      // User not found or account requires registration/activation.
+      throw createError('Invalid username or password.', 'AUTH');
+    }
+
+    if (user.password !== password) {
       throw createError('Invalid username or password.', 'AUTH');
     }
 

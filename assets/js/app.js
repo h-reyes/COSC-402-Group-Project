@@ -48,6 +48,7 @@ async function initRegisterPage() {
   const passwordLetterRule = document.getElementById('passwordLetterRule');
   const passwordNumberRule = document.getElementById('passwordNumberRule');
   const passwordSymbolRule = document.getElementById('passwordSymbolRule');
+  const confirmHint = document.getElementById('confirmPasswordHint');
 
   function updatePasswordRequirements(value) {
     const hasLength = value.length >= 16;
@@ -69,6 +70,18 @@ async function initRegisterPage() {
   updatePasswordRequirements(passwordInput.value);
   passwordInput.addEventListener('input', () => {
     updatePasswordRequirements(passwordInput.value);
+    // update confirm hint on password change
+    if (confirmInput.value.length > 0) {
+      confirmHint.textContent = confirmInput.value === passwordInput.value ? 'Passwords match' : 'Passwords do not match';
+      confirmHint.classList.toggle('password-rule-met', confirmInput.value === passwordInput.value);
+      confirmHint.classList.toggle('password-rule-unmet', confirmInput.value !== passwordInput.value);
+    }
+  });
+
+  confirmInput.addEventListener('input', () => {
+    confirmHint.textContent = confirmInput.value === passwordInput.value ? 'Passwords match' : 'Passwords do not match';
+    confirmHint.classList.toggle('password-rule-met', confirmInput.value === passwordInput.value);
+    confirmHint.classList.toggle('password-rule-unmet', confirmInput.value !== passwordInput.value);
   });
 
   form.addEventListener('submit', async (event) => {

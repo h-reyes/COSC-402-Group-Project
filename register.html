@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src https://fonts.gstatic.com; img-src 'self' data:;">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Digital Library | Create Account</title>
   <link rel="stylesheet" href="assets/css/styles.css">
@@ -42,12 +43,10 @@
           <input class="input" id="registerConfirmPassword" name="registerConfirmPassword" type="password" autocomplete="new-password" required>
         </label>
 
-        <label for="registerRole">Account role
-          <select class="select" id="registerRole" name="registerRole" required>
-            <option value="patron">Patron</option>
-            <option value="librarian">Librarian</option>
-          </select>
-        </label>
+        <p id="confirmPasswordHint" class="small" aria-live="polite"></p>
+
+        <!-- Role selection is enforced server-side; frontend defaults to patron to prevent client-side privilege escalation -->
+        <input type="hidden" id="registerRole" name="registerRole" value="patron">
 
         <div class="button-row">
           <button class="btn btn-primary" type="submit">Create Account</button>
