@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Library | Inventory Management</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="inventory">
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="librarian-dashboard.html">
+        <span class="brand-mark" aria-hidden="true">DL</span>
+        <span>Digital Library</span>
+      </a>
+      <nav id="topNav" class="nav-links" aria-label="Main"></nav>
+    </header>
+
+    <main class="container grid grid-2">
+      <section class="card" aria-labelledby="inventoryHeading">
+        <h1 id="inventoryHeading">Inventory Management</h1>
+        <form id="inventoryForm" class="form-grid" novalidate>
+          <label for="invIsbn">ISBN
+            <input class="input" id="invIsbn" name="invIsbn" type="text" required>
+          </label>
+
+          <label for="invTitle">Title
+            <input class="input" id="invTitle" name="invTitle" type="text" required>
+          </label>
+
+          <label for="invAuthor">Author
+            <input class="input" id="invAuthor" name="invAuthor" type="text" required>
+          </label>
+
+          <label for="invQty">Quantity
+            <input class="input" id="invQty" name="invQty" type="number" min="0" required>
+          </label>
+
+          <div class="button-row">
+            <button class="btn btn-primary" type="submit">Save Inventory Item</button>
+          </div>
+          <p id="inventoryMessage" class="message" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="card" aria-labelledby="inventoryTableHeading">
+        <h2 id="inventoryTableHeading">Current Inventory</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>ISBN</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Qty</th>
+              </tr>
+            </thead>
+            <tbody id="inventoryRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/js/api.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/ui.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+</body>
+</html>
