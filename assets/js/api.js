@@ -101,7 +101,7 @@ const Api = {
     const role = payload.role;
 
     const usernamePattern = /^[a-zA-Z0-9_]{3,20}$/;
-    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{16,128}$/;
+    const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z\d]).{12,128}$/;
 
     if (fullName.length < 2 || !usernamePattern.test(username) || !passwordPattern.test(password)) {
       throw createError('Registration details are invalid.', 'VALIDATION');

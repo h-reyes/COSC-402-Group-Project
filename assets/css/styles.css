@@ -358,12 +358,17 @@ button:focus-visible,
 }
 
 .badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-size: 0.74rem;
   border-radius: 999px;
   padding: 0.2rem 0.55rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.4px;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .badge.available {

@@ -45,24 +45,28 @@ async function initRegisterPage() {
   const roleInput = document.getElementById('registerRole');
   const message = document.getElementById('registerMessage');
   const passwordLengthRule = document.getElementById('passwordLengthRule');
-  const passwordLetterRule = document.getElementById('passwordLetterRule');
+  const passwordUppercaseRule = document.getElementById('passwordUppercaseRule');
+  const passwordLowercaseRule = document.getElementById('passwordLowercaseRule');
   const passwordNumberRule = document.getElementById('passwordNumberRule');
   const passwordSymbolRule = document.getElementById('passwordSymbolRule');
   const confirmHint = document.getElementById('confirmPasswordHint');
 
   function updatePasswordRequirements(value) {
-    const hasLength = value.length >= 16;
-    const hasLetter = /[A-Za-z]/.test(value);
+    const hasLength = value.length >= 12;
+    const hasUppercase = /[A-Z]/.test(value);
+    const hasLowercase = /[a-z]/.test(value);
     const hasNumber = /\d/.test(value);
     const hasSymbol = /[^A-Za-z\d]/.test(value);
 
     passwordLengthRule.classList.toggle('password-rule-met', hasLength);
-    passwordLetterRule.classList.toggle('password-rule-met', hasLetter);
+    passwordUppercaseRule.classList.toggle('password-rule-met', hasUppercase);
+    passwordLowercaseRule.classList.toggle('password-rule-met', hasLowercase);
     passwordNumberRule.classList.toggle('password-rule-met', hasNumber);
     passwordSymbolRule.classList.toggle('password-rule-met', hasSymbol);
 
     passwordLengthRule.classList.toggle('password-rule-unmet', !hasLength);
-    passwordLetterRule.classList.toggle('password-rule-unmet', !hasLetter);
+    passwordUppercaseRule.classList.toggle('password-rule-unmet', !hasUppercase);
+    passwordLowercaseRule.classList.toggle('password-rule-unmet', !hasLowercase);
     passwordNumberRule.classList.toggle('password-rule-unmet', !hasNumber);
     passwordSymbolRule.classList.toggle('password-rule-unmet', !hasSymbol);
   }
@@ -95,7 +99,7 @@ async function initRegisterPage() {
     const role = roleInput.value;
 
     const usernamePattern = /^[a-zA-Z0-9_]{3,20}$/;
-    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{16,128}$/;
+    const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z\d]).{12,128}$/;
     updatePasswordRequirements(password);
 
     if (fullName.length < 2) {
@@ -109,7 +113,7 @@ async function initRegisterPage() {
     }
 
     if (!passwordPattern.test(password)) {
-      setMessage(message, 'Password must be at least 16 characters and include letters, numbers, and symbols.', 'error');
+      setMessage(message, 'Password must be at least 12 characters and include uppercase letters, lowercase letters, numbers, and special characters.', 'error');
       return;
     }
 
