@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Library | Transaction Log</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="transactions">
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="librarian-dashboard.html">
+        <span class="brand-mark" aria-hidden="true">DL</span>
+        <span>Digital Library</span>
+      </a>
+      <nav id="topNav" class="nav-links" aria-label="Main"></nav>
+    </header>
+
+    <main class="container grid">
+      <section class="card" aria-labelledby="txHeading">
+        <h1 id="txHeading">Transaction Log</h1>
+        <p>Review checkout, return, and inventory update events.</p>
+
+        <form id="filterForm" class="grid grid-2" novalidate>
+          <label for="filterUser">Filter by User ID
+            <input class="input" id="filterUser" name="filterUser" type="text" placeholder="Optional">
+          </label>
+
+          <label for="filterType">Filter by Type
+            <select class="select" id="filterType" name="filterType">
+              <option value="all">All</option>
+              <option value="checkout">Checkout</option>
+              <option value="return">Return</option>
+              <option value="inventory-update">Inventory Update</option>
+            </select>
+          </label>
+
+          <div class="button-row" style="grid-column: 1 / -1;">
+            <button class="btn btn-primary" type="submit">Apply Filters</button>
+            <button class="btn btn-outline" id="clearFilter" type="button">Clear</button>
+          </div>
+        </form>
+
+        <p id="txMessage" class="message" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="card" aria-labelledby="txTableHeading">
+        <h2 id="txTableHeading">Entries</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Transaction ID</th>
+                <th>User ID</th>
+                <th>Book ID</th>
+                <th>Book Title</th>
+                <th>Type</th>
+                <th>Date/Time</th>
+              </tr>
+            </thead>
+            <tbody id="txRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/js/api.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/ui.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Library | Create Account</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="register">
+  <main class="login-wrap">
+    <section class="card hero-card" aria-labelledby="registerHeading">
+      <h1 id="registerHeading" class="hero-title">Create Your Library Account</h1>
+      <p class="hero-subtitle">Register as a patron or librarian for this frontend demo.</p>
+    </section>
+
+    <section class="card" aria-labelledby="registerFormHeading">
+      <h2 id="registerFormHeading">Sign up</h2>
+      <form id="registerForm" class="form-grid" novalidate>
+        <label for="registerFullName">Full name
+          <input class="input" id="registerFullName" name="registerFullName" type="text" autocomplete="name" required>
+        </label>
+
+        <label for="registerUsername">Username
+          <input class="input" id="registerUsername" name="registerUsername" type="text" autocomplete="username" required>
+        </label>
+
+        <label for="registerPassword">Password
+          <input class="input" id="registerPassword" name="registerPassword" type="password" autocomplete="new-password" required>
+        </label>
+
+        <label for="registerConfirmPassword">Confirm password
+          <input class="input" id="registerConfirmPassword" name="registerConfirmPassword" type="password" autocomplete="new-password" required>
+        </label>
+
+        <label for="registerRole">Account role
+          <select class="select" id="registerRole" name="registerRole" required>
+            <option value="patron">Patron</option>
+            <option value="librarian">Librarian</option>
+          </select>
+        </label>
+
+        <div class="button-row">
+          <button class="btn btn-primary" type="submit">Create Account</button>
+          <a class="btn btn-outline" href="index.html">Back to Login</a>
+        </div>
+
+        <p id="registerMessage" class="message" role="status" aria-live="polite"></p>
+      </form>
+      <p class="small">Password rule: at least 16 characters with letters, numbers, and symbols.</p>
+    </section>
+  </main>
+
+  <script src="assets/js/api.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/ui.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+</body>
+</html>

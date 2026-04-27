@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Library | Librarian Dashboard</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="librarian-dashboard">
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="librarian-dashboard.html">
+        <span class="brand-mark" aria-hidden="true">DL</span>
+        <span>Digital Library</span>
+      </a>
+      <nav id="topNav" class="nav-links" aria-label="Main"></nav>
+    </header>
+
+    <main class="container grid">
+      <section class="card hero-card" aria-labelledby="libHeading">
+        <h1 id="libHeading" class="hero-title">Librarian Control Center</h1>
+        <p class="hero-subtitle">Monitor inventory health and borrowing activity at a glance.</p>
+      </section>
+
+      <section class="grid grid-3">
+        <article class="kpi">
+          <p class="kpi-label">Catalog Titles</p>
+          <p id="kpiTotalBooks" class="kpi-value">0</p>
+        </article>
+        <article class="kpi">
+          <p class="kpi-label">Total Units in Stock</p>
+          <p id="kpiInStock" class="kpi-value">0</p>
+        </article>
+        <article class="kpi">
+          <p class="kpi-label">Currently Borrowed</p>
+          <p id="kpiBorrowed" class="kpi-value">0</p>
+        </article>
+      </section>
+
+      <section class="card grid grid-2" aria-labelledby="quickLinksHeading">
+        <h2 id="quickLinksHeading" style="grid-column: 1 / -1;">Quick Actions</h2>
+        <a class="card" href="inventory.html">
+          <h3>Manage Inventory</h3>
+          <p>Create new books and update quantities.</p>
+        </a>
+        <a class="card" href="transactions.html">
+          <h3>Review Transactions</h3>
+          <p>Track checkouts, returns, and inventory updates.</p>
+        </a>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/js/api.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/ui.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+</body>
+</html>
