@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Library | Login</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="login">
+  <main class="login-wrap">
+    <section class="card hero-card" aria-labelledby="loginHeading">
+      <h1 id="loginHeading" class="hero-title">Digital Library Borrowing System</h1>
+     
+    </section>
+
+    <section class="card" aria-labelledby="loginFormHeading">
+      <h2 id="loginFormHeading">Sign in</h2>
+      <form id="loginForm" class="form-grid" novalidate>
+        <label for="username">Username
+          <input class="input" id="username" name="username" type="text" autocomplete="username" required>
+        </label>
+
+        <label for="password">Password
+          <input class="input" id="password" name="password" type="password" autocomplete="current-password" required>
+        </label>
+
+        <div class="button-row">
+          <button class="btn btn-primary" type="submit">Login</button>
+        </div>
+        <p id="loginMessage" class="message" role="status" aria-live="polite"></p>
+      </form>
+
+      <p class="small">Demo patron: patron1 / Patron123</p>
+      <p class="small">Demo librarian: librarian1 / Library123</p>
+      <p class="small">Need an account? <a href="register.html">Create one here</a>.</p>
+    </section>
+  </main>
+
+  <script src="assets/js/api.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/ui.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+</body>
+</html>

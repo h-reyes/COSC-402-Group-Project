@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Library | Patron Dashboard</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="patron-dashboard">
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="patron-dashboard.html">
+        <span class="brand-mark" aria-hidden="true">DL</span>
+        <span>Digital Library</span>
+      </a>
+      <nav id="topNav" class="nav-links" aria-label="Main"></nav>
+    </header>
+
+    <main class="container grid grid-2">
+      <section class="card" aria-labelledby="checkoutHeading">
+        <h1 id="checkoutHeading">Borrow a Book</h1>
+        <form id="checkoutForm" class="form-grid" novalidate>
+          <label for="checkoutBookId">Book ID
+            <input class="input" id="checkoutBookId" name="checkoutBookId" type="number" min="1" required>
+          </label>
+          <div class="button-row">
+            <button class="btn btn-primary" type="submit">Checkout</button>
+          </div>
+          <p id="checkoutMessage" class="message" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="card" aria-labelledby="returnHeading">
+        <h2 id="returnHeading">Return a Book</h2>
+        <form id="returnForm" class="form-grid" novalidate>
+          <label for="returnBookId">Book ID
+            <input class="input" id="returnBookId" name="returnBookId" type="number" min="1" required>
+          </label>
+          <div class="button-row">
+            <button class="btn btn-accent" type="submit">Return</button>
+          </div>
+          <p id="returnMessage" class="message" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="card" aria-labelledby="borrowedHeading" style="grid-column: 1 / -1;">
+        <h2 id="borrowedHeading">My Borrowed Books</h2>
+        <div id="borrowedList" class="list"></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/js/api.js" defer></script>
+  <script src="assets/js/auth.js" defer></script>
+  <script src="assets/js/ui.js" defer></script>
+  <script src="assets/js/app.js" defer></script>
+</body>
+</html>
