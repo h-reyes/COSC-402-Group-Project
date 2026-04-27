@@ -44,6 +44,32 @@ async function initRegisterPage() {
   const confirmInput = document.getElementById('registerConfirmPassword');
   const roleInput = document.getElementById('registerRole');
   const message = document.getElementById('registerMessage');
+  const passwordLengthRule = document.getElementById('passwordLengthRule');
+  const passwordLetterRule = document.getElementById('passwordLetterRule');
+  const passwordNumberRule = document.getElementById('passwordNumberRule');
+  const passwordSymbolRule = document.getElementById('passwordSymbolRule');
+
+  function updatePasswordRequirements(value) {
+    const hasLength = value.length >= 16;
+    const hasLetter = /[A-Za-z]/.test(value);
+    const hasNumber = /\d/.test(value);
+    const hasSymbol = /[^A-Za-z\d]/.test(value);
+
+    passwordLengthRule.classList.toggle('password-rule-met', hasLength);
+    passwordLetterRule.classList.toggle('password-rule-met', hasLetter);
+    passwordNumberRule.classList.toggle('password-rule-met', hasNumber);
+    passwordSymbolRule.classList.toggle('password-rule-met', hasSymbol);
+
+    passwordLengthRule.classList.toggle('password-rule-unmet', !hasLength);
+    passwordLetterRule.classList.toggle('password-rule-unmet', !hasLetter);
+    passwordNumberRule.classList.toggle('password-rule-unmet', !hasNumber);
+    passwordSymbolRule.classList.toggle('password-rule-unmet', !hasSymbol);
+  }
+
+  updatePasswordRequirements(passwordInput.value);
+  passwordInput.addEventListener('input', () => {
+    updatePasswordRequirements(passwordInput.value);
+  });
 
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
@@ -57,6 +83,7 @@ async function initRegisterPage() {
 
     const usernamePattern = /^[a-zA-Z0-9_]{3,20}$/;
     const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z\d]).{16,128}$/;
+    updatePasswordRequirements(password);
 
     if (fullName.length < 2) {
       setMessage(message, 'Enter your full name.', 'error');

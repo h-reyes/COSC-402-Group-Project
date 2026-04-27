@@ -28,6 +28,16 @@
           <input class="input" id="registerPassword" name="registerPassword" type="password" autocomplete="new-password" required>
         </label>
 
+        <div class="password-checklist" aria-live="polite" aria-atomic="true">
+          <p class="small password-checklist-title">Password requirements:</p>
+          <ul id="passwordRequirements" class="password-list">
+            <li id="passwordLengthRule" class="password-rule">At least 16 characters</li>
+            <li id="passwordLetterRule" class="password-rule">At least one letter</li>
+            <li id="passwordNumberRule" class="password-rule">At least one number</li>
+            <li id="passwordSymbolRule" class="password-rule">At least one symbol</li>
+          </ul>
+        </div>
+
         <label for="registerConfirmPassword">Confirm password
           <input class="input" id="registerConfirmPassword" name="registerConfirmPassword" type="password" autocomplete="new-password" required>
         </label>
@@ -46,7 +56,6 @@
 
         <p id="registerMessage" class="message" role="status" aria-live="polite"></p>
       </form>
-      <p class="small">Password rule: at least 16 characters with letters, numbers, and symbols.</p>
     </section>
   </main>
 
