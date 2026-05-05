@@ -1,4 +1,6 @@
 async function initLoginPage() {
+  const genericLoginError = 'Unable to sign in. Please try again.';
+
   if (Auth.isLoggedIn()) {
     Auth.redirectByRole();
     return;
@@ -17,7 +19,7 @@ async function initLoginPage() {
     const password = passwordInput.value.trim();
 
     if (username.length < 3 || password.length < 6) {
-      setMessage(message, 'Enter a valid username and password.', 'error');
+      setMessage(message, genericLoginError, 'error');
       return;
     }
 
@@ -26,8 +28,28 @@ async function initLoginPage() {
       setMessage(message, 'Login successful. Redirecting...', 'success');
       Auth.redirectByRole();
     } catch (_error) {
-      setMessage(message, 'Invalid username or password.', 'error');
+      setMessage(message, genericLoginError, 'error');
     }
+  });
+}
+
+async function safeRecordAuditEvent(token, description) {
+  try {
+    await Api.recordAuditEvent(token, description);
+  } catch (_error) {
+    // The user action should not be rolled back just because audit logging failed.
+  }
+}
+
+function formatAuditTimestamp(timestamp) {
+  return new Date(timestamp).toLocaleString(undefined, {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false
   });
 }
 
@@ -151,7 +173,7 @@ async function initRegisterPage() {
 
     if (role === 'librarian') {
       if (!librarianPin) {
-        setMessage(message, 'Librarian PIN is required.', 'error');
+        setMessage(message, 'Staff PIN is required.', 'error');
         return;
       }
     }
@@ -207,7 +229,7 @@ function createBookNode(book, isPatron, onCheckout) {
 }
 
 async function initCatalogPage() {
-  const session = Auth.requireAuth(['patron', 'librarian']);
+  const session = Auth.requireAuth(['patron', 'librarian', 'admin']);
   if (!session) {
     return;
   }
@@ -232,6 +254,7 @@ async function initCatalogPage() {
       const node = createBookNode(book, isPatron, async (bookId) => {
         try {
           await Api.checkoutBook(session.user.id, bookId);
+          await safeRecordAuditEvent(session.token, `${session.user.username} checked out book ID ${bookId}.`);
           setMessage(message, 'Book checked out successfully.', 'success');
           const refreshed = await Api.getBooks();
           renderBooks(refreshed);
@@ -332,6 +355,7 @@ async function initPatronDashboard() {
 
     try {
       await Api.checkoutBook(session.user.id, bookId);
+      await safeRecordAuditEvent(session.token, `${session.user.username} checked out book ID ${bookId}.`);
       setMessage(checkoutMessage, 'Checkout complete.', 'success');
       checkoutForm.reset();
       renderBorrowed();
@@ -352,6 +376,7 @@ async function initPatronDashboard() {
 
     try {
       await Api.returnBook(session.user.id, bookId);
+      await safeRecordAuditEvent(session.token, `${session.user.username} returned book ID ${bookId}.`);
       setMessage(returnMessage, 'Return recorded.', 'success');
       returnForm.reset();
       renderBorrowed();
@@ -433,7 +458,13 @@ async function initInventoryPage() {
     }
 
     try {
+      const existingBooks = await Api.getBooks();
+      const existingBook = existingBooks.find((book) => book.isbn === payload.isbn.trim());
       await Api.upsertInventory(payload);
+      const actionDescription = existingBook
+        ? `${session.user.username} updated inventory for ${payload.title.trim()} (ISBN ${payload.isbn.trim()}).`
+        : `${session.user.username} added new book ${payload.title.trim()} (ISBN ${payload.isbn.trim()}).`;
+      await safeRecordAuditEvent(session.token, actionDescription);
       setMessage(message, 'Inventory saved successfully.', 'success');
       form.reset();
       renderInventory();
@@ -519,7 +550,52 @@ async function initTransactionsPage() {
   refresh();
 }
 
-function initPage() {
+async function initAdminLogPage() {
+  const session = Auth.requireAuth(['admin']);
+  if (!session) {
+    return;
+  }
+
+  Auth.buildNav('topNav');
+
+  const tableBody = document.getElementById('auditRows');
+  const message = document.getElementById('auditMessage');
+
+  try {
+    const rows = await Api.getAuditLogs(session.token);
+    clearElementChildren(tableBody);
+
+    if (rows.length === 0) {
+      setMessage(message, 'No system log entries yet.', 'error');
+      return;
+    }
+
+    setMessage(message, `${rows.length} system log entries found.`, 'success');
+
+    rows.forEach((item) => {
+      const row = document.createElement('tr');
+      const columns = [
+        formatAuditTimestamp(item.timestamp),
+        item.actor ? `${item.actor.fullName} (${item.actor.role})` : 'System',
+        item.description
+      ];
+
+      columns.forEach((value) => {
+        const cell = document.createElement('td');
+        cell.textContent = String(value);
+        row.appendChild(cell);
+      });
+
+      tableBody.appendChild(row);
+    });
+  } catch (error) {
+    setMessage(message, error.message, 'error');
+  }
+}
+
+async function initPage() {
+  await Auth.syncSession();
+
   const page = document.body.getAttribute('data-page');
 
   if (page === 'login') {
@@ -554,6 +630,11 @@ function initPage() {
 
   if (page === 'transactions') {
     initTransactionsPage();
+    return;
+  }
+
+  if (page === 'admin-log') {
+    initAdminLogPage();
   }
 }
 

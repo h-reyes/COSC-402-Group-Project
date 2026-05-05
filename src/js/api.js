@@ -48,12 +48,15 @@ function simulate(data, delay = 180) {
 }
 
 async function requestApi(path, options = {}) {
+  const { token, headers = {}, ...fetchOptions } = options;
   const response = await fetch(`${API_BASE_URL}${path}`, {
+    credentials: 'same-origin',
     headers: {
       'Content-Type': 'application/json',
-      ...(options.headers || {})
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...headers
     },
-    ...options
+    ...fetchOptions
   });
 
   const data = await response.json().catch(() => ({}));
@@ -99,6 +102,34 @@ const Api = {
         role,
         librarianPin: payload.librarianPin
       })
+    });
+  },
+
+  async getSession() {
+    return requestApi('/api/session', {
+      method: 'GET'
+    });
+  },
+
+  async logout(token) {
+    return requestApi('/api/logout', {
+      method: 'POST',
+      token
+    });
+  },
+
+  async recordAuditEvent(token, description) {
+    return requestApi('/api/audit-events', {
+      method: 'POST',
+      token,
+      body: JSON.stringify({ description })
+    });
+  },
+
+  async getAuditLogs(token) {
+    return requestApi('/api/audit-logs', {
+      method: 'GET',
+      token
     });
   },
 

@@ -40,6 +40,17 @@ const Auth = {
     return Boolean(session && session.user && session.user.role === role);
   },
 
+  async syncSession() {
+    try {
+      const result = await Api.getSession();
+      setCurrentSession(result);
+      return result;
+    } catch (_error) {
+      clearCurrentSession();
+      return null;
+    }
+  },
+
   async login(username, password) {
     const result = await Api.login(username, password);
     setCurrentSession(result);
@@ -52,15 +63,28 @@ const Auth = {
     return result;
   },
 
-  logout() {
-    clearCurrentSession();
-    window.location.href = 'index.html';
+  async logout() {
+    const session = getCurrentSession();
+
+    try {
+      await Api.logout(session ? session.token : null);
+    } catch (_error) {
+      // Logging out locally should still work if the audit request fails.
+    } finally {
+      clearCurrentSession();
+      window.location.href = 'index.html';
+    }
   },
 
   redirectByRole() {
     const session = getCurrentSession();
     if (!session) {
       window.location.href = 'index.html';
+      return;
+    }
+
+    if (session.user.role === 'admin') {
+      window.location.href = 'admin-log.html';
       return;
     }
 
@@ -103,7 +127,8 @@ const Auth = {
       { role: 'patron', href: 'patron-dashboard.html', label: 'Borrowing' },
       { role: 'librarian', href: 'librarian-dashboard.html', label: 'Librarian Home' },
       { role: 'librarian', href: 'inventory.html', label: 'Inventory' },
-      { role: 'librarian', href: 'transactions.html', label: 'Transactions' }
+      { role: 'librarian', href: 'transactions.html', label: 'Transactions' },
+      { role: 'admin', href: 'admin-log.html', label: 'System Log' }
     ];
 
     links.forEach((link) => {

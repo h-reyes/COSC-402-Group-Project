@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; font-src https://fonts.gstatic.com; img-src 'self' data:;">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digital Library | System Log</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body data-page="admin-log">
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="admin-log.html">
+        <span class="brand-mark" aria-hidden="true">DL</span>
+        <span>Digital Library</span>
+      </a>
+      <nav id="topNav" class="nav-links" aria-label="Main"></nav>
+    </header>
+
+    <main class="container grid">
+      <section class="card" aria-labelledby="auditHeading">
+        <h1 id="auditHeading">System Log</h1>
+        <p>Review account, access, and library activity recorded by the system.</p>
+        <p id="auditMessage" class="message" role="status" aria-live="polite"></p>
+      </section>
+
+      <section class="card" aria-labelledby="auditTableHeading">
+        <h2 id="auditTableHeading">Entries</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Actor</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody id="auditRows"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="assets/js/api.min.js" defer></script>
+  <script src="assets/js/auth.min.js" defer></script>
+  <script src="assets/js/ui.min.js" defer></script>
+  <script src="assets/js/app.min.js" defer></script>
+</body>
+</html>
