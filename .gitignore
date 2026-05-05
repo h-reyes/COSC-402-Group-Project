@@ -1,0 +1,17 @@
+# Sensitive configuration files - store secrets locally, never commit
+
+.env
+
+
+# Dependencies
+node_modules/
+
+# Build artifacts
+dist/
+build/
+
+# IDE and OS
+.DS_Store
+*.log
+.vscode/
+.idea/

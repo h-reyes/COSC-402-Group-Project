@@ -43,6 +43,8 @@ async function initRegisterPage() {
   const passwordInput = document.getElementById('registerPassword');
   const confirmInput = document.getElementById('registerConfirmPassword');
   const roleInput = document.getElementById('registerRole');
+  const librarianPinInput = document.getElementById('librarianPin');
+  const librarianPinLabel = document.getElementById('librarianPinLabel');
   const message = document.getElementById('registerMessage');
   const passwordLengthRule = document.getElementById('passwordLengthRule');
   const passwordUppercaseRule = document.getElementById('passwordUppercaseRule');
@@ -88,6 +90,23 @@ async function initRegisterPage() {
     confirmHint.classList.toggle('password-rule-unmet', confirmInput.value !== passwordInput.value);
   });
 
+  // Update hidden role input when radio buttons change
+  document.querySelectorAll('input[name="registerRole"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      console.log('Role changed to:', radio.value);
+      roleInput.value = radio.value;
+      // Show/hide librarian PIN field
+      if (radio.value === 'librarian') {
+        librarianPinLabel.style.display = 'block';
+        librarianPinInput.required = true;
+      } else {
+        librarianPinLabel.style.display = 'none';
+        librarianPinInput.required = false;
+        librarianPinInput.value = '';
+      }
+    });
+  });
+
   form.addEventListener('submit', async (event) => {
     event.preventDefault();
     setMessage(message, '');
@@ -96,7 +115,10 @@ async function initRegisterPage() {
     const username = usernameInput.value.trim();
     const password = passwordInput.value;
     const confirmPassword = confirmInput.value;
-    const role = roleInput.value;
+    const role = document.querySelector('input[name="registerRole"]:checked').value;
+    const librarianPin = librarianPinInput.value;
+
+    console.log('Form submitted with role:', role, 'PIN:', librarianPin);
 
     const usernamePattern = /^[a-zA-Z0-9_]{3,20}$/;
     const passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[^A-Za-z\d]).{12,128}$/;
@@ -127,8 +149,15 @@ async function initRegisterPage() {
       return;
     }
 
+    if (role === 'librarian') {
+      if (!librarianPin) {
+        setMessage(message, 'Librarian PIN is required.', 'error');
+        return;
+      }
+    }
+
     try {
-      await Auth.register(fullName, username, password, role);
+      await Auth.register(fullName, username, password, role, librarianPin);
       setMessage(message, 'Account created. Redirecting...', 'success');
       Auth.redirectByRole();
     } catch (error) {

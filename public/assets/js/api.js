@@ -1,5 +1,5 @@
 const DB_STORAGE_KEY = 'dls_db_v1';
-const USERS_STORAGE_KEY = 'dls_users_v1';
+const API_BASE_URL = window.location.origin;
 
 function nowIso() {
   return new Date().toISOString();
@@ -47,50 +47,29 @@ function simulate(data, delay = 180) {
   });
 }
 
-// For demo purpose we keep users in localStorage. Do NOT store real passwords here in production.
-// Initialize with an empty list so teams must register users via the UI or backend instead of shipping secrets in source.
-const demoUsers = [];
+async function requestApi(path, options = {}) {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers || {})
+    },
+    ...options
+  });
 
-function loadUsers() {
-  const raw = localStorage.getItem(USERS_STORAGE_KEY);
-  if (raw) {
-    try {
-      return JSON.parse(raw) || [];
-    } catch (_error) {
-      localStorage.removeItem(USERS_STORAGE_KEY);
-    }
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw createError(data.message || 'Request failed.', 'API');
   }
 
-  // Seed nothing by default to avoid shipping credentials in source.
-  localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(demoUsers));
-  return [...demoUsers];
-}
-
-function saveUsers(users) {
-  localStorage.setItem(USERS_STORAGE_KEY, JSON.stringify(users));
+  return data;
 }
 
 const Api = {
   async login(username, password) {
-    const users = loadUsers();
-    const user = users.find((entry) => entry.username === username);
-    if (!user || !user.password) {
-      // User not found or account requires registration/activation.
-      throw createError('Invalid username or password.', 'AUTH');
-    }
-
-    if (user.password !== password) {
-      throw createError('Invalid username or password.', 'AUTH');
-    }
-
-    return simulate({
-      token: `mock-token-${user.id}`,
-      user: {
-        id: user.id,
-        username: user.username,
-        role: user.role,
-        fullName: user.fullName
-      }
+    return requestApi('/api/login', {
+      method: 'POST',
+      body: JSON.stringify({ username, password })
     });
   },
 
@@ -111,31 +90,15 @@ const Api = {
       throw createError('Invalid account role selected.', 'VALIDATION');
     }
 
-    const users = loadUsers();
-    const alreadyExists = users.some((entry) => entry.username.toLowerCase() === username.toLowerCase());
-    if (alreadyExists) {
-      throw createError('Username already exists. Choose another username.', 'CONFLICT');
-    }
-
-    const newUser = {
-      id: `u-${role}-${Date.now()}`,
-      username,
-      password,
-      role,
-      fullName
-    };
-
-    users.push(newUser);
-    saveUsers(users);
-
-    return simulate({
-      token: `mock-token-${newUser.id}`,
-      user: {
-        id: newUser.id,
-        username: newUser.username,
-        role: newUser.role,
-        fullName: newUser.fullName
-      }
+    return requestApi('/api/register', {
+      method: 'POST',
+      body: JSON.stringify({
+        fullName,
+        username,
+        password,
+        role,
+        librarianPin: payload.librarianPin
+      })
     });
   },
 

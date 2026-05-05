@@ -46,8 +46,8 @@ const Auth = {
     return result;
   },
 
-  async register(fullName, username, password, role) {
-    const result = await Api.register({ fullName, username, password, role });
+  async register(fullName, username, password, role, librarianPin) {
+    const result = await Api.register({ fullName, username, password, role, librarianPin });
     setCurrentSession(result);
     return result;
   },

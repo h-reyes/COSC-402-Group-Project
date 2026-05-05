@@ -46,6 +46,22 @@
 
         <p id="confirmPasswordHint" class="small" aria-live="polite"></p>
 
+        <!-- Role selection for demo purposes -->
+        <fieldset>
+          <legend>Account Type</legend>
+          <label>
+            <input type="radio" name="registerRole" value="patron" checked> Patron
+          </label>
+          <label>
+            <input type="radio" name="registerRole" value="librarian"> Librarian
+          </label>
+        </fieldset>
+
+        <label for="librarianPin" id="librarianPinLabel" style="display: none;">
+          Librarian PIN
+          <input class="input" id="librarianPin" name="librarianPin" type="password" autocomplete="off">
+        </label>
+
         <!-- Role selection is enforced server-side; frontend defaults to patron to prevent client-side privilege escalation -->
         <input type="hidden" id="registerRole" name="registerRole" value="patron">
 
